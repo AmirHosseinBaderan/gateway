@@ -20,5 +20,5 @@ type ServerConfig struct {
 
 type Upstream struct {
 	ConfigPath string   `yaml:"config_path"`
-	Items      []string `yaml:"items"`
+	Servers    []string `yaml:"servers"`
 }

@@ -49,7 +49,7 @@ func LoadUpstreams(path string) ([]Upstream, error) {
 			return nil, fmt.Errorf("unmarshal yaml: %w", err)
 		}
 
-		if len(upstream.Items) == 0 {
+		if len(upstream.Servers) == 0 {
 			return nil, fmt.Errorf("empty upstream items")
 		}
 		upstreams = append(upstreams, upstream)
