@@ -1,14 +1,14 @@
 package main
 
 import (
-	"gateway/internal/config"
+	"gateway/internal/config/base"
 	"gateway/internal/server"
 	"log"
 	"net/http"
 )
 
 func main() {
-	cfg, err := config.Load("./config/settings.yml")
+	cfg, err := base.Load("./config/settings.yml")
 	if err != nil {
 		log.Fatalf("load config: %v", err)
 		return
