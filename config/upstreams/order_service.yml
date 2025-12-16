@@ -12,4 +12,12 @@ routes:
         method: GET
       downstream:
         schema: http
-        route: /order
+        route: /order/get-list
+  - name: get_by_id
+    config:
+      upstream:
+        route: /api/order/get-by-id
+        method: GET
+      downstream:
+        schema: http
+        route: /order/get-by-id
