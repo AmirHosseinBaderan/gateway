@@ -3,7 +3,7 @@ package server
 import (
 	"context"
 	"fmt"
-	"gateway/internal/config"
+	"gateway/internal/config/base"
 	"net/http"
 	"time"
 )
@@ -12,7 +12,7 @@ type HttpServer struct {
 	server *http.Server
 }
 
-func New(cfg *config.ServerConfig, handler http.Handler) *HttpServer {
+func New(cfg *base.ServerConfig, handler http.Handler) *HttpServer {
 	addr := fmt.Sprintf("%s:%d", cfg.Host, cfg.Port)
 
 	srv := &http.Server{

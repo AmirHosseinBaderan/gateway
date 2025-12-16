@@ -1,0 +1,15 @@
+servers:
+  - "http://localhost:3000"
+  - "http://localhost:3001"
+  - "http://localhost:3002"
+
+load_balancer: random
+routes:
+  - name: get_list
+    config:
+      upstream:
+        route: /api/order/get-list
+        method: GET
+      downstream:
+        schema: http
+        route: /order
