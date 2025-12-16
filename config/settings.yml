@@ -5,7 +5,6 @@ app:
     config_path: ./config/upstreams
     items:
       - order_service
-      - blog_service
 
 server:
   host: 0.0.0.0
