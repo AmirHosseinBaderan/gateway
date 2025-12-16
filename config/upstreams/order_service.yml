@@ -14,34 +14,31 @@ routes:
         schema: http
         route: /order/get-list
   - name: get_by_id
-    config:
-      upstream:
-        route: /api/order/get-by-id
-        method: GET
-      downstream:
-        schema: http
-        route: /order/get-by-id
-    before:
-      call:
-        http:
-          address: "http://logservice.ir/check-access"
-          method: POST
-          body:
-            action: { { $route.name } }
-            appToken: { { $request.headers.x-api-key } }
-          response:
-            if:
-              { { $response.status == 200 && $response.jsonBody.status == true } }
-            then:
-              continue
-            else:
-              block
-    after:
-      call:
-        http:
-          address: "http://logservice.ir/log-use"
-          method: POST
-          body:
-            action: { { $route.name } }
-            appToken: { { $request.headers.x-api-key } }
+    upstream:
+      route: /api/order/get-by-id
+      method: GET
+    downstream:
+      schema: http
+      route: /order/get-by-id
+    middlewares:
+      - name: check-access
+        when: before
+        type: http
+        method: POST
+        url: "http://logservice.ir/check-access"
+        body:
+          action: "{{ route.name }}"
+          appToken: "{{ request.headers.x-api-key }}"
+        response_policy:
+          success_if: "status == 200 && body.status == true"
+          on_fail: block
+
+      - name: log-usage
+        when: after
+        type: http
+        method: POST
+        url: "http://logservice.ir/log-use"
+        body:
+          action: "{{ route.name }}"
+          appToken: "{{ request.headers.x-api-key }}"
 

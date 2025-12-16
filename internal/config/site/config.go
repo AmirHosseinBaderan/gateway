@@ -1,5 +1,7 @@
 package site
 
+import "gateway/internal/config/middleware"
+
 type Config struct {
 	Servers      []string `json:"servers"`
 	LoadBalancer string   `yaml:"load_balancer"`
@@ -7,13 +9,10 @@ type Config struct {
 }
 
 type Route struct {
-	Name   string      `yaml:"name"`
-	Config RouteConfig `yaml:"config"`
-}
-
-type RouteConfig struct {
-	Upstream   Upstream   `yaml:"upstream"`
-	Downstream Downstream `yaml:"downstream"`
+	Name        string                  `yaml:"name"`
+	Upstream    Upstream                `yaml:"upstream"`
+	Downstream  Downstream              `yaml:"downstream"`
+	Middlewares []middleware.Middleware `yaml:"middlewares"`
 }
 
 type Downstream struct {
