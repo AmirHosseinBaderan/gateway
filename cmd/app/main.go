@@ -2,7 +2,9 @@ package main
 
 import (
 	"gateway/internal/config"
+	"gateway/internal/server"
 	"log"
+	"net/http"
 )
 
 func main() {
@@ -12,11 +14,21 @@ func main() {
 		return
 	}
 
+	mux := http.NewServeMux()
+	mux.HandleFunc("/health", func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte("OK"))
+	})
+
+	httpServer := server.New(cfg, mux)
+
 	log.Printf("starting %s (%s) on %s:%d",
 		cfg.App.Name,
 		cfg.App.Env,
 		cfg.Server.Host,
 		cfg.Server.Port)
 
-	select {}
+	if err := httpServer.Start(); err != nil {
+		log.Fatalf("start http server: %v", err)
+	}
 }

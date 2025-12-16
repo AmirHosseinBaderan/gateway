@@ -12,7 +12,7 @@ type HttpServer struct {
 	server *http.Server
 }
 
-func New(cfg config.Config, handler http.Handler) *HttpServer {
+func New(cfg *config.Config, handler http.Handler) *HttpServer {
 	addr := fmt.Sprintf("%s:%d", cfg.Server.Host, cfg.Server.Port)
 
 	srv := &http.Server{
