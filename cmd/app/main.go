@@ -2,6 +2,7 @@ package main
 
 import (
 	"gateway/internal/config/base"
+	"gateway/internal/config/site"
 	"gateway/internal/server"
 	"log"
 	"net/http"
@@ -13,6 +14,12 @@ func main() {
 		log.Fatalf("load config: %v", err)
 		return
 	}
+
+	sites, err := site.LoadSites(cfg.App.Upstream)
+	if err != nil {
+		log.Fatalf("load sites: %v", err)
+	}
+	log.Printf("load sites count : %v", len(sites))
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/health", func(w http.ResponseWriter, _ *http.Request) {
