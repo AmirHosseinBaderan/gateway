@@ -1,6 +1,7 @@
 app:
   name: go-gateway
   env: dev
+  middleware_path: ./config/middleware
   upstream:
     config_path: ./config/upstreams
     items:

@@ -1,8 +1,9 @@
 package base
 
 type Config struct {
-	App    AppConfig    `yaml:"app"`
-	Server ServerConfig `yaml:"server"`
+	App            AppConfig    `yaml:"app"`
+	Server         ServerConfig `yaml:"server"`
+	MiddlewarePath string       `yaml:"middleware_path"`
 }
 
 type AppConfig struct {
