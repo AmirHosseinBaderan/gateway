@@ -1,0 +1,9 @@
+app:
+  name: go-gateway
+  env: dev
+
+server:
+  host: 0.0.0.0
+  port: 8080
+  read_timeout_ms: 5000
+  write_timeout_ms: 5000
