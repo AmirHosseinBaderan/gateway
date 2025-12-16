@@ -20,7 +20,7 @@ func main() {
 		_, _ = w.Write([]byte("OK"))
 	})
 
-	httpServer := server.New(cfg, mux)
+	httpServer := server.New(&cfg.Server, mux)
 
 	log.Printf("starting %s (%s) on %s:%d",
 		cfg.App.Name,
