@@ -3,23 +3,31 @@ package main
 import (
 	"gateway/internal/config/base"
 	"gateway/internal/config/site"
+	"gateway/internal/logging"
 	"gateway/internal/server"
-	"log"
 	"net/http"
+
+	"go.uber.org/zap"
 )
 
 func main() {
+	// Initialize structured logger
+	if err := logging.InitLogger(); err != nil {
+		panic(err)
+	}
+	defer logging.Sync()
+
 	cfg, err := base.Load("./config/settings.yml")
 	if err != nil {
-		log.Fatalf("load config: %v", err)
+		logging.Logger.Fatal("Failed to load config", zap.Error(err))
 		return
 	}
 
 	sites, err := site.LoadSites(cfg.App.Upstream)
 	if err != nil {
-		log.Fatalf("load sites: %v", err)
+		logging.Logger.Fatal("Failed to load sites", zap.Error(err))
 	}
-	log.Printf("load sites count : %v", len(sites))
+	logging.Logger.Info("Sites loaded successfully", zap.Int("count", len(sites)))
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/health", func(w http.ResponseWriter, _ *http.Request) {
@@ -29,13 +37,13 @@ func main() {
 
 	httpServer := server.New(&cfg.Server, mux)
 
-	log.Printf("starting %s (%s) on %s:%d",
-		cfg.App.Name,
-		cfg.App.Env,
-		cfg.Server.Host,
-		cfg.Server.Port)
+	logging.Logger.Info("Starting server",
+		zap.String("name", cfg.App.Name),
+		zap.String("env", cfg.App.Env),
+		zap.String("host", cfg.Server.Host),
+		zap.Int("port", cfg.Server.Port))
 
 	if err := httpServer.Start(); err != nil {
-		log.Fatalf("start http server: %v", err)
+		logging.Logger.Fatal("Failed to start HTTP server", zap.Error(err))
 	}
 }

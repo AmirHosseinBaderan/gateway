@@ -4,8 +4,11 @@ import (
 	"context"
 	"fmt"
 	"gateway/internal/config/base"
+	"gateway/internal/logging"
 	"net/http"
 	"time"
+
+	"go.uber.org/zap"
 )
 
 type HttpServer struct {
@@ -28,9 +31,11 @@ func New(cfg *base.ServerConfig, handler http.Handler) *HttpServer {
 }
 
 func (s *HttpServer) Start() error {
+	logging.Logger.Info("HTTP server starting", zap.String("addr", s.server.Addr))
 	return s.server.ListenAndServe()
 }
 
 func (s *HttpServer) Shutdown(ctx context.Context) error {
+	logging.Logger.Info("HTTP server shutting down")
 	return s.server.Shutdown(ctx)
 }
