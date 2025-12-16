@@ -2,6 +2,7 @@ package main
 
 import (
 	"gateway/internal/config/base"
+	"gateway/internal/config/middleware"
 	"gateway/internal/config/site"
 	"gateway/internal/logging"
 	"gateway/internal/server"
@@ -28,6 +29,15 @@ func main() {
 		logging.Logger.Fatal("Failed to load sites", zap.Error(err))
 	}
 	logging.Logger.Info("Sites loaded successfully", zap.Int("count", len(sites)))
+
+	var globalMiddleware []middleware.Middleware
+	if cfg.MiddlewarePath != "" {
+		globalMiddleware, err = middleware.Load(cfg.MiddlewarePath)
+		if err != nil {
+			logging.Logger.Fatal("Failed to load middleware", zap.Error(err))
+		}
+	}
+	logging.Logger.Info("Middleware loaded successfully", zap.Int("count", len(globalMiddleware)))
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/health", func(w http.ResponseWriter, _ *http.Request) {
